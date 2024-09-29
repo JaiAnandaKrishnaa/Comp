@@ -24,15 +24,15 @@ def authenticate(username, password):
         st.error("Invalid username or password")
         return False
 
-data = pd.read_csv('data/Final dataset.csv')
+data = pd.read_csv('Unicompare/data/Final dataset.csv')
 data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
 
 if 'page' not in st.session_state:
     st.session_state.page = "Home"
-if 'page_number' not in st.session_state:
-    st.session_state.page_number = 0
 if 'superset_data' not in st.session_state:
     st.session_state.superset_data = None
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False  # Initialize authentication state
 
 st.markdown("""
     <style>
@@ -62,7 +62,6 @@ st.markdown("""
         border-color: #2980b9;
         outline: none;
     }
-    /* Specific style for login and logout buttons */
     .login-logout-button > button:first-child {
         background-color: #3498db;
         color: white;
@@ -113,13 +112,15 @@ if not is_authenticated():
         with st.form(key='login_form'):
             username = st.text_input("👤 Username")
             password = st.text_input("🔒 Password", type="password")
-            st.markdown('</div>', unsafe_allow_html=True)
-
             login_button = st.form_submit_button("Login")
 
             if login_button:
                 if authenticate(username, password):
-                    st.experimental_rerun()
+                    # If authentication is successful, set the page to Home
+                    st.session_state.page = "Home"
+                else:
+                    # Do not reset the page if authentication fails
+                    st.session_state.page = "Login"
 
 if is_authenticated():
     if st.session_state.page == "Home":
@@ -128,7 +129,7 @@ if is_authenticated():
         logout_button = st.button("Logout", key="logout")
         if logout_button:
             st.session_state.authenticated = False
-            st.experimental_rerun()
+            st.session_state.page = "Login"  # Redirect to Login page after logout
 
     elif st.session_state.page == "Unicompare":
         unicompare(data)

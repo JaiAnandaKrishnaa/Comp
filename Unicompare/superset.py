@@ -34,7 +34,6 @@ def create_superset(data):
         with st.spinner("Creating superset with default keywords..."):
             time.sleep(2)
             st.session_state.superset_data = process_superset(data, default_keywords)
-            st.experimental_rerun()
 
     if 'superset_data' in st.session_state:
         table_df = st.session_state.superset_data

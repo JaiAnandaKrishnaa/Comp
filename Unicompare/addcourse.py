@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
+import os
 
 def add_course(data):
     st.title("📚 Add a New Course")
 
-    st.markdown("""
+    st.markdown(""" 
         <style>
         .title {
             font-size: 24px;
@@ -34,6 +35,12 @@ def add_course(data):
         </style>
     """, unsafe_allow_html=True)
 
+    # Ensure the directory exists
+    directory = 'Unicompare/data'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Initialize session state variables
     if 'course_structures' not in st.session_state:
         st.session_state.course_structures = []
     if 'topic_count' not in st.session_state:
@@ -114,15 +121,19 @@ def add_course(data):
                     new_courses.append(new_course)
 
                 new_courses_df = pd.DataFrame(new_courses)
+
+                # Append the new courses to the existing DataFrame
                 data = pd.concat([data, new_courses_df], ignore_index=True)
-                data.to_csv('data/Final dataset.csv', index=False)
+
+                # Save the updated DataFrame back to CSV
+                data.to_csv(os.path.join(directory, 'Final dataset.csv'), index=False)
                 st.session_state.recently_uploaded_course = new_courses_df
                 st.success("Courses added successfully!")
 
+                # Clear session state variables
                 for key in ['course_name', 'course_type', 'university_name', 'fees', 'country', 'state', 'website_link', 'course_structures', 'topic_count']:
                     if key in st.session_state:
                         del st.session_state[key]
-
 
         if st.button("Back to Home"):
             st.session_state.page = "Home"
@@ -137,7 +148,6 @@ def add_course(data):
 
         if st.sidebar.button("View Prev added Courses"):
             st.session_state.current_page = "view_prev_courses"
-
 
     elif st.session_state.current_page == "view_courses":
         st.title("📋 Recently Uploaded Courses")
@@ -165,13 +175,14 @@ def add_course(data):
                     edited_courses_df.at[index, column_name] = new_value
 
             if st.button("Save Changes"):
-                edited_courses_df['Duration(in hours)'] = edited_courses_df['Duration for Each Course (in hours)'].sum()
-
-                data = pd.concat([data, edited_courses_df], ignore_index=True)
-                data.to_csv('data/Final dataset.csv', index=False)
-                st.session_state.recently_uploaded_course = edited_courses_df
+                # Update the original DataFrame with the edited DataFrame
+                for index in range(len(edited_courses_df)):
+                    data.loc[data.index == index, edited_courses_df.columns] = edited_courses_df.iloc[index]
+                
+                # Save the updated DataFrame back to CSV
+                data.to_csv(os.path.join(directory, 'Final dataset.csv'), index=False)
+                st.session_state.recently_uploaded_course = edited_courses_df  # Update the session state
                 st.success("Courses edited and saved successfully!")
-
         else:
             st.warning("No recently uploaded courses to edit.")
 
@@ -186,14 +197,29 @@ def add_course(data):
 
         start_idx = (page_number - 1) * page_size
         end_idx = start_idx + page_size
+        prev_courses_to_display = data.iloc[start_idx:end_idx]
 
-        paginated_data = data.iloc[start_idx:end_idx]
-
-        if paginated_data.empty:
-            st.warning("No previous courses to display.")
+        if not prev_courses_to_display.empty:
+            st.write(prev_courses_to_display.to_html(escape=False, index=False), unsafe_allow_html=True)
         else:
-            st.write("### Previously Added Courses")
-            st.write(paginated_data.to_html(escape=False, index=False), unsafe_allow_html=True)
+            st.warning("No previous courses to display.")
 
         if st.button("Back to Add Course"):
             st.session_state.current_page = "add_course"
+
+        if st.button("Back to Home"):
+            st.session_state.page = "Home"
+
+if __name__ == "__main__":
+    # Load existing course data from CSV if it exists
+    directory = 'Unicompare/data'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    csv_path = os.path.join(directory, 'Final dataset.csv')
+    if os.path.isfile(csv_path):
+        data = pd.read_csv(csv_path)
+    else:
+        data = pd.DataFrame()
+
+    add_course(data)
