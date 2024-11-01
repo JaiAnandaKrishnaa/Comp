@@ -23,7 +23,6 @@ def home():
             }
             .course-card:hover {
                 transform: scale(1.05);
-                background-color: #f0f8ff;
             }
             .button {
                 background-color: #4A90E2;
