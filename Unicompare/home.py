@@ -64,27 +64,23 @@ def home():
     st.write("### Course Types")
     st.write("Here are a few course types along with their descriptions:")
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        with st.expander("Workshop", expanded=False):
-            st.markdown("<div class='course-card'><h4>Workshop</h4><p>Short-term, intensive sessions focused on a specific skill or topic, typically lasting from a few hours to a few days (0 - 10 hours).</p></div>", unsafe_allow_html=True)
+        with st.expander("Short Term Course", expanded=False):
+            st.markdown("<div class='course-card'><h4>Short Term Course</h4><p>Courses with a quick learning focus, lasting from 0 to 10 hours.</p></div>", unsafe_allow_html=True)
 
     with col2:
-        with st.expander("Short Term Course", expanded=False):
-            st.markdown("<div class='course-card'><h4>Short Term Course</h4><p>Courses that provide in-depth knowledge or skills on a particular subject, usually lasting from a few days to several weeks (10.5 - 45 hours).</p></div>", unsafe_allow_html=True)
+        with st.expander("Certificate", expanded=False):
+            st.markdown("<div class='course-card'><h4>Certificate</h4><p>Specialized training and education courses, typically lasting from 11 to 20 hours.</p></div>", unsafe_allow_html=True)
 
     with col3:
-        with st.expander("Certificate", expanded=False):
-            st.markdown("<div class='course-card'><h4>Certificate</h4><p>Programs that offer specialized training and education, often for professional development, ranging from a few weeks to several months (45 - 300 hours).</p></div>", unsafe_allow_html=True)
+        with st.expander("Diploma", expanded=False):
+            st.markdown("<div class='course-card'><h4>Diploma</h4><p>In-depth programs covering a broader area of study, lasting from 21 to 40 hours.</p></div>", unsafe_allow_html=True)
 
     with col4:
-        with st.expander("Diploma", expanded=False):
-            st.markdown("<div class='course-card'><h4>Diploma</h4><p>Comprehensive programs that cover a broad area of study, typically lasting from a few months to a year or more (301 - 780 hours).</p></div>", unsafe_allow_html=True)
-
-    with col5:
         with st.expander("Degree Course", expanded=False):
-            st.markdown("<div class='course-card'><h4>Degree Course</h4><p>Extensive programs that lead to a degree, covering a wide range of subjects and skills, usually spanning several years (781 - 8000 hours).</p></div>", unsafe_allow_html=True)
+            st.markdown("<div class='course-card'><h4>Degree Course</h4><p>Comprehensive programs leading to a degree, lasting from 41 to a maximum number of hours.</p></div>", unsafe_allow_html=True)
 
     st.write("### Get Started with Adding or Comparing Courses")
 
