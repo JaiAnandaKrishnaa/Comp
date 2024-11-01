@@ -57,7 +57,7 @@ def home():
     """, unsafe_allow_html=True)
 
     st.markdown("<h1 class='header'>Welcome to Unicompare</h1>", unsafe_allow_html=True)
-    st.write(""" #### This web app allows you to search and compare university courses based on various filters. Click on the button below to get started.
+    st.write(""" #### This platform enables you to filter data and create custom supersets for in-depth comparisons. It’s designed to streamline your search and comparison process, allowing you to tailor data views based on specific filters, analyze results, and compare key insights effectively.
     """)
 
     st.write("### Course Types")
